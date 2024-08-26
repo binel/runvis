@@ -1,5 +1,7 @@
 import pygame
 
+from gpx import Gpx
+
 def main():
     pygame.init()
 
@@ -18,5 +20,7 @@ def main():
 
     pygame.quit()
 
+#main()
 
-main();
+gpxFile = Gpx()
+gpxFile.parse("data/activity_13349242690.gpx")
