@@ -1,8 +1,20 @@
+import sys
+
 import pygame
 
 from gpx import Gpx
 
 def main():
+    if len(sys.argv) != 2:
+        print("Usage: main.py <path/to/gpx/file>")
+        return
+    
+    path = sys.argv[1]
+    gpxFile = Gpx()
+    gpxFile.parse(path)
+
+    return
+
     pygame.init()
 
     window = pygame.display.set_mode((400, 300))
@@ -20,7 +32,4 @@ def main():
 
     pygame.quit()
 
-#main()
-
-gpxFile = Gpx()
-gpxFile.parse("data/activity_13349242690.gpx")
+main()
