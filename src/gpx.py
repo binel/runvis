@@ -54,7 +54,7 @@ class Gpx:
             else:
                 eleMeters = eleEle.text
 
-            coord = Coordinate(lat, long, eleMeters, timeEle)
+            coord = Coordinate(float(lat), float(long), eleMeters, timeEle)
             self.positions.append(coord)
             
 
