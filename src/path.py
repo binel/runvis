@@ -1,3 +1,5 @@
+import math
+
 from point import Point
 
 class Path: 
@@ -5,10 +7,25 @@ class Path:
         self.pathCoords = []
 
     def SetPath(self, gpxFile, gpsBox, windowWidth, windowHeight):
-        latScale = windowHeight / (gpsBox.maxLat - gpsBox.minLat)
-        longScale = windowWidth / (gpsBox.maxLong - gpsBox.minLong)
+        minX, minY = self.LatLongToMercator(gpsBox.minLat, gpsBox.minLong)
+        maxX, maxY = self.LatLongToMercator(gpsBox.maxLat, gpsBox.maxLong)
+        
+        mapWidth = maxX - minX
+        mapHeight = maxY - minY
+
+        scale = min(windowWidth / mapWidth, windowHeight / mapHeight)  # uniform scale
+
+        xOffset = (windowWidth - mapWidth * scale) / 2
+        yOffset = (windowHeight - mapHeight * scale) / 2 - 50
 
         for pos in gpxFile.positions:
-            xpos = 50 + (pos.long - gpsBox.minLong) * longScale
-            ypos = windowHeight + 50 - ((pos.lat - gpsBox.minLat) * latScale)
+            x, y = self.LatLongToMercator(pos.lat, pos.long)
+            xpos = (x - minX) * scale + xOffset
+            ypos = windowHeight - ((y - minY) * scale + yOffset)
             self.pathCoords.append(Point(xpos, ypos))
+
+    def LatLongToMercator(self, lat, lon):
+        R = 6378137 # Earth radius in meters 
+        x = R * math.radians(lon)
+        y = R * math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))
+        return x, y
